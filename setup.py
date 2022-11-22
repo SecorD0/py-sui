@@ -13,7 +13,7 @@ setup(
     long_description_content_type='text/markdown',
     long_description=long_description,
     packages=find_packages(),
-    install_requires=['beautifulsoup4', 'bip-utils', 'fake-useragent', 'nacl',
-                      'pretty-utils @ git+https://github.com/SecorD0/pretty-utils@main', 'requests'],
+    install_requires=['beautifulsoup4', 'bip-utils', 'fake-useragent',
+                      'pretty-utils @ git+https://github.com/SecorD0/pretty-utils@main', 'PyNaCl', 'requests'],
     keywords=['sui', 'sdk', 'pysui', 'py-sui', 'suipy', 'sui-py'],
 )
