@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -213,11 +214,15 @@ Coin:
         print('----------------------------------------------------------------------------')
 
     @staticmethod
-    def history():
-        client = Client(mnemonic, proxy)
-        print(client.account)
+    def history(address: Optional[str] = None):
+        if address:
+            client = Client('')
 
-        history = client.transactions.history()
+        else:
+            client = Client(mnemonic, proxy)
+            print(client.account)
+
+        history = client.transactions.history(address)
         print(f'Incoming ({len(history.incoming)}):')
         for tx in history.incoming:
             print(tx)
@@ -249,3 +254,4 @@ if __name__ == '__main__':
     test.merge_coin()
     test.merge_token('usdt')
     test.history()
+    test.history('0x0f2df809112256ec9068c2663bc4901c8a1b3ce7')

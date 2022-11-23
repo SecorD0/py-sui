@@ -66,6 +66,7 @@ class WalletInfo:
 class Tx:
     digest: str
     status: str
+    timestamp: int
     sender: str
     recipients: Optional[List[str]]
     transactions: List[dict]

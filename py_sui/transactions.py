@@ -38,6 +38,7 @@ class Transaction:
                     data = certificate['data']
                     history.incoming.append(Tx(digest=certificate['transactionDigest'],
                                                status=incoming_tx['effects']['status']['status'],
+                                               timestamp=int(incoming_tx['timestamp_ms'] / 1000),
                                                transactions=data['transactions'], sender=address, recipients=None,
                                                raw_dict=incoming_tx))
             except:
@@ -53,6 +54,7 @@ class Transaction:
                     data = certificate['data']
                     history.outgoing.append(Tx(digest=certificate['transactionDigest'],
                                                status=outgoing_tx['effects']['status']['status'],
+                                               timestamp=int(outgoing_tx['timestamp_ms'] / 1000),
                                                transactions=data['transactions'], sender=data['sender'],
                                                recipients=[address], raw_dict=outgoing_tx))
 
