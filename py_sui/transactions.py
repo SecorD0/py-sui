@@ -31,7 +31,6 @@ class Transaction:
             try:
                 incoming_txs = response[0]['result']['data']
                 json_data = [RPC.getTransaction(client=self.client, digest=tx, get_json=True) for tx in incoming_txs]
-                print(json_data)
                 incoming_txs = [incoming_tx['result'] for incoming_tx in
                                 RPC.send_request(client=self.client, json_data=json_data)]
                 for incoming_tx in incoming_txs:

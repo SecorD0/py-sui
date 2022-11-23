@@ -49,7 +49,7 @@ Coin:
 
     @staticmethod
     def request_sui_coins():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         print(client.wallet.request_coins_from_faucet())
@@ -59,7 +59,7 @@ Coin:
 
     @staticmethod
     def my_balance():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -78,7 +78,7 @@ Coin:
 
     @staticmethod
     def mint_example_nft():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -96,7 +96,7 @@ Coin:
 
     @staticmethod
     def mint_wizard_nft():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -116,7 +116,7 @@ Coin:
 
     @staticmethod
     def mint_bluemove_nft():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -137,7 +137,7 @@ Coin:
 
     @staticmethod
     def send_coin():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -152,7 +152,7 @@ Coin:
 
     @staticmethod
     def send_token(token: str):
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -167,7 +167,7 @@ Coin:
 
     @staticmethod
     def send_nft(nft: str):
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -184,7 +184,7 @@ Coin:
 
     @staticmethod
     def merge_coin():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -199,7 +199,7 @@ Coin:
 
     @staticmethod
     def merge_token(token: str):
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         balance = client.wallet.balance()
@@ -214,7 +214,7 @@ Coin:
 
     @staticmethod
     def history():
-        client = Client(str(os.getenv('MNEMONIC')), str(os.getenv('PROXY')))
+        client = Client(mnemonic, proxy)
         print(client.account)
 
         history = client.transactions.history()
@@ -233,6 +233,8 @@ Coin:
 
 if __name__ == '__main__':
     load_dotenv()
+    mnemonic = str(os.getenv('MNEMONIC'))
+    proxy = str(os.getenv('PROXY'))
     test = Test()
     test.balance('0xc4173a804406a365e69dfb297d4eaaf002546ebd')
     test.generate_wallet()
