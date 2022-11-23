@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, List, Dict
-
+from pretty_utils.type_functions.classes import AutoRepr
 
 class Types:
     Base64 = str
@@ -103,12 +103,21 @@ class Coin:
     object_ids: List[ObjectID]
 
 
-@dataclass
-class Nft:
-    name: str
-    description: str
-    image_url: str
-    object_id: Optional[str] = None
+class Nft(AutoRepr):
+    def __init__(self, name: Optional[str] = None, description: Optional[str] = None, image_url: Optional[str] = None,
+                 arguments: Optional[list] = None, object_id: Optional[str] = None) -> None:
+        if arguments:
+            self.name: Optional[str] = arguments[0]
+            self.description: Optional[str] = arguments[1]
+            self.image_url: Optional[str] = arguments[2]
+            self.arguments: Optional[list] = arguments
+
+        else:
+            self.name: Optional[str] = name
+            self.description: Optional[str] = description
+            self.image_url: Optional[str] = image_url
+            self.arguments: Optional[list] = [self.name, self.description, self.image_url]
+        self.object_id: Optional[str] = object_id
 
 
 @dataclass

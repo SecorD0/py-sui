@@ -106,8 +106,8 @@ Coin:
 
         print()
 
-        nft = Nft(name='Wizard Land', description='Expanding The Magic Land',
-                  image_url='https://gateway.pinata.cloud/ipfs/QmYfw8RbtdjPAF3LrC6S3wGVwWgn6QKq4LGS4HFS55adU2?w=800&h=450&c=crop')
+        nft = Nft(arguments=["Wizard Land", "Expanding The Magic Land",
+                             "https://gateway.pinata.cloud/ipfs/QmYfw8RbtdjPAF3LrC6S3wGVwWgn6QKq4LGS4HFS55adU2?w=800&h=450&c=crop"])
         client.nfts.mint(nft=nft)
         balance = client.wallet.balance()
         for obj_id, value in balance.nfts.items():
