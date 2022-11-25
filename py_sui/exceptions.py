@@ -1,3 +1,8 @@
+from typing import Optional
+
+import requests
+
+
 class ClientException(Exception):
     pass
 
@@ -7,7 +12,8 @@ class InvalidProxy(ClientException):
 
 
 class RPCException(ClientException):
-    pass
+    def __init__(self, response: Optional[requests.Response]):
+        self.response = response
 
 
 class NFTException(Exception):

@@ -117,8 +117,7 @@ class Wallet:
                 return response.json()
 
             else:
-                raise exceptions.RPCException(
-                    f'The RPC was called with an error {response.status_code}! Details: {response.text}')
+                raise exceptions.RPCException(response)
 
         else:
             raise exceptions.FaucetException("You didn't specify the faucet URL!")

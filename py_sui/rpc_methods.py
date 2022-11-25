@@ -22,8 +22,7 @@ class RPC:
             return response.json()
 
         else:
-            raise exceptions.RPCException(
-                f'The RPC was called with an error {response.status_code}! Details: {response.text}')
+            raise exceptions.RPCException(response)
 
     @staticmethod
     def batchTransaction(client, signer: Types.SuiAddress,
