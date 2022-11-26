@@ -32,6 +32,10 @@ class NoSuchToken(TransactionException):
     pass
 
 
+class NotEnoughBalance(TransactionException):
+    pass
+
+
 class WalletException(Exception):
     pass
 

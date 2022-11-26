@@ -19,7 +19,7 @@ from py_sui.wallet import Wallet
 
 class Client:
     def __init__(self, mnemonic: Optional[str] = None, proxy: Optional[str] = None, network: Network = Networks.Testnet,
-                 derivation_path: str = "m/44'/784'/0'/0'/0'") -> None:
+                 check_proxy: bool = True, derivation_path: str = "m/44'/784'/0'/0'/0'") -> None:
         self.network = network
         self.derivation_path = derivation_path
 
@@ -41,16 +41,17 @@ class Client:
 
                 proxies = {'http': self.proxy, 'https': self.proxy}
                 self.session.proxies.update(proxies)
-                response = self.session.get('https://whoer.net/')
-                if '@' in self.proxy:
-                    proxy = text_between(self.proxy, '@', ':')
-                else:
-                    proxy = text_between(self.proxy, end=':')
+                if check_proxy:
+                    response = self.session.get('https://whoer.net/')
+                    if '@' in self.proxy:
+                        proxy = text_between(self.proxy, '@', ':')
+                    else:
+                        proxy = text_between(self.proxy, end=':')
 
-                if proxy not in response.text:
-                    soup = BS(response.text, 'html.parser')
-                    your_ip = soup.find('strong', class_='your-ip').get_text(strip=True)
-                    raise exceptions.InvalidProxy(f"Proxy doesn't work! Your IP is {your_ip}")
+                    if proxy not in response.text:
+                        soup = BS(response.text, 'html.parser')
+                        your_ip = soup.find('strong', class_='your-ip').get_text(strip=True)
+                        raise exceptions.InvalidProxy(f"Proxy doesn't work! Your IP is {your_ip}")
 
             except Exception as e:
                 raise exceptions.InvalidProxy(str(e))
