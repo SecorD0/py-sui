@@ -32,7 +32,7 @@ class NoSuchToken(TransactionException):
     pass
 
 
-class NotEnoughBalance(TransactionException):
+class InsufficientBalance(TransactionException):
     pass
 
 

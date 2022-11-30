@@ -64,17 +64,7 @@ Coin:
         print(client.account)
 
         balance = client.wallet.balance()
-        print(balance)
-        print(balance.coin, end='\n\n')
-
-        for obj_id, value in balance.tokens.items():
-            print(obj_id, value)
-
-        print()
-
-        for obj_id, value in balance.nfts.items():
-            print(obj_id, value)
-
+        Test.print_balance(balance)
         print('----------------------------------------------------------------------------')
 
     @staticmethod
