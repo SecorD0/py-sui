@@ -12,7 +12,7 @@ ed25519-blake2b==1.4
 fake-useragent==1.0.1
 idna==3.4
 numpy==1.23.5
-pretty-utils @ git+https://github.com/SecorD0/pretty-utils@f2f9f769ab85124b534a2b8a8a6a37947f14d96a
+pretty-utils @ git+https://github.com/SecorD0/pretty-utils@main
 py-sr25519-bindings==0.2.0
 pycparser==2.21
 pycryptodome==3.15.0
