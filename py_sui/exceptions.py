@@ -12,8 +12,17 @@ class InvalidProxy(ClientException):
 
 
 class RPCException(ClientException):
-    def __init__(self, response: Optional[requests.Response]):
+    def __init__(self, response: Optional[requests.Response] = None, code: Optional[int] = None,
+                 message: Optional[str] = None) -> None:
         self.response = response
+        self.code = code
+        self.message = message
+
+    def __str__(self):
+        if self.code:
+            return f'{self.code}, {self.message}'
+
+        return f'{self.response.status_code}'
 
 
 class NFTException(Exception):

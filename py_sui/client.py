@@ -3,10 +3,11 @@ import hashlib
 from typing import Optional
 
 import bip_utils
-import nacl
 import requests
 from bs4 import BeautifulSoup as BS
 from fake_useragent import UserAgent
+from nacl.encoding import Base64Encoder
+from nacl.signing import SigningKey
 from pretty_utils.type_functions.strings import text_between
 
 from py_sui import exceptions
@@ -79,17 +80,18 @@ class Client:
         self.transactions = Transaction(self)
         self.wallet = Wallet(self)
 
-    def sign_data(self, data: bytes) -> Optional[bytes]:
-        return nacl.signing.SigningKey(self.account.private_key.bytes_).sign(data)[:64]
+    def sign_data(self, tx_data: bytes) -> Optional[bytes]:
+        indata = bytearray([0, 0, 0])
+        indata.extend(tx_data)
 
-    def sign_and_execute_transaction(self, tx_bytes: bytes) -> Optional[dict]:
-        signature_bytes = self.sign_data(tx_bytes)
+        compound = bytearray([SignatureScheme.ED25519])
+        signed = SigningKey(self.account.private_key.bytes_).sign(bytes(indata), encoder=Base64Encoder).signature
+        compound.extend(base64.b64decode(signed))
+        compound.extend(self.account.public_key.bytes_[1:])
+        return base64.b64encode(bytes(compound))
 
-        tx_bytes = base64.b64encode(tx_bytes).decode()
-        sig_scheme = SignatureScheme.ED25519
-        signature = base64.b64encode(signature_bytes).decode()
-        pub_key = base64.b64encode(self.account.public_key.bytes_[1:]).decode()
+    def sign_and_execute_transaction(self, tx_bytes: StringAndBytes) -> Optional[dict]:
+        signature = self.sign_data(tx_bytes.bytes_).decode()
         request_type = ExecuteType.WaitForLocalExecution
-
-        return RPC.executeTransaction(client=self, tx_bytes=tx_bytes, sig_scheme=sig_scheme, signature=signature,
-                                      pub_key=pub_key, request_type=request_type)
+        return RPC.executeTransactionSerializedSig(client=self, tx_bytes=tx_bytes.str_, signature=signature,
+                                                   request_type=request_type)

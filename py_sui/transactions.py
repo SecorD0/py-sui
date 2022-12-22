@@ -5,7 +5,7 @@ from typing import Optional, List
 import requests
 
 from py_sui import exceptions
-from py_sui.models import Types, History, Tx, Coin, Nft
+from py_sui.models import Types, History, Tx, Coin, Nft, StringAndBytes
 from py_sui.rpc_methods import RPC
 
 
@@ -77,7 +77,8 @@ class Transaction:
         response = RPC.moveCall(client=self.client, signer=self.client.account.address,
                                 package_object_id=package_object_id, module=module, function=function,
                                 type_arguments=type_arguments, arguments=arguments, gas=gas, gas_budget=gas_budget)
-        tx_bytes = base64.b64decode(str(response['result']['txBytes']))
+        tx_bytes = str(response['result']['txBytes'])
+        tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
         return self.client.sign_and_execute_transaction(tx_bytes)
 
     def merge_coin(self, coin: Coin) -> Optional[List[dict]]:
@@ -103,7 +104,8 @@ class Transaction:
                 response = RPC.mergeCoins(client=self.client, signer=self.client.account.address,
                                           primary_coin=primary_coin, coin_to_merge=object_id, gas=gas,
                                           gas_budget=gas_budget)
-                tx_bytes = base64.b64decode(str(response['result']['txBytes']))
+                tx_bytes = str(response['result']['txBytes'])
+                tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
                 response = self.client.sign_and_execute_transaction(tx_bytes)
                 responses.append(response)
 
@@ -125,7 +127,8 @@ class Transaction:
         input_coins = [gas] + input_coins
         response = RPC.paySui(client=self.client, signer=self.client.account.address, input_coins=input_coins,
                               recipients=[recipient], amounts=[amount], gas_budget=gas_budget)
-        tx_bytes = base64.b64decode(str(response['result']['txBytes']))
+        tx_bytes = str(response['result']['txBytes'])
+        tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
         return self.client.sign_and_execute_transaction(tx_bytes)
 
     def send_token(self, token: Optional[Coin], recipient: Types.SuiAddress, amount: int) -> Optional[dict]:
@@ -139,7 +142,8 @@ class Transaction:
             input_coins = [object_id.id for object_id in balance.tokens[token.name].object_ids]
             response = RPC.pay(client=self.client, signer=self.client.account.address, input_coins=input_coins,
                                recipients=[recipient], amounts=[amount], gas=gas, gas_budget=gas_budget)
-            tx_bytes = base64.b64decode(str(response['result']['txBytes']))
+            tx_bytes = str(response['result']['txBytes'])
+            tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
             return self.client.sign_and_execute_transaction(tx_bytes)
 
         else:
@@ -153,5 +157,6 @@ class Transaction:
 
         response = RPC.transferObject(client=self.client, signer=self.client.account.address, object_id=nft.object_id,
                                       recipient=recipient, gas=gas, gas_budget=gas_budget)
-        tx_bytes = base64.b64decode(str(response['result']['txBytes']))
+        tx_bytes = str(response['result']['txBytes'])
+        tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
         return self.client.sign_and_execute_transaction(tx_bytes)
