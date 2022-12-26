@@ -115,6 +115,18 @@ class Transaction:
         finally:
             return responses
 
+    def send_object(self, object_id: str, recipient: Types.SuiAddress) -> Optional[dict]:
+        gas_budget = 1_000
+        gas = self.client.wallet.find_object_for_gas(gas_budget=gas_budget)
+        if not gas:
+            raise exceptions.InsufficientGas()
+
+        response = RPC.transferObject(client=self.client, signer=self.client.account.address, object_id=object_id,
+                                      recipient=recipient, gas=gas, gas_budget=gas_budget)
+        tx_bytes = str(response['result']['txBytes'])
+        tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
+        return self.client.sign_and_execute_transaction(tx_bytes)
+
     def send_coin(self, recipient: Types.SuiAddress, amount: int) -> Optional[dict]:
         balance = self.client.wallet.balance()
         gas_budget = 1_000
@@ -150,13 +162,4 @@ class Transaction:
             raise exceptions.NoSuchToken('There is no such token!')
 
     def send_nft(self, nft: Optional[Nft], recipient: Types.SuiAddress) -> Optional[dict]:
-        gas_budget = 1_000
-        gas = self.client.wallet.find_object_for_gas(gas_budget=gas_budget)
-        if not gas:
-            raise exceptions.InsufficientGas()
-
-        response = RPC.transferObject(client=self.client, signer=self.client.account.address, object_id=nft.object_id,
-                                      recipient=recipient, gas=gas, gas_budget=gas_budget)
-        tx_bytes = str(response['result']['txBytes'])
-        tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
-        return self.client.sign_and_execute_transaction(tx_bytes)
+        return self.send_object(object_id=nft.object_id, recipient=recipient)
