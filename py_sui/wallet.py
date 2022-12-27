@@ -73,7 +73,8 @@ class Wallet:
         finally:
             return balance
 
-    def find_object_for_gas(self, gas_budget: int = 10_000, balance: Optional[Balance] = None) -> Optional[str]:
+    def find_object_for_gas(self, gas_budget: int = 10_000, balance: Optional[Balance] = None,
+                            reverse: bool = False) -> Optional[str]:
         if not balance:
             coin = None
             response = RPC.getObjectsOwnedByAddress(client=self.client, address=self.client.account.address)
@@ -103,7 +104,7 @@ class Wallet:
         else:
             coin = balance.coin
 
-        sorted_objects = sorted(coin.object_ids, key=lambda obj: obj.amount)
+        sorted_objects = sorted(coin.object_ids, key=lambda obj: obj.amount, reverse=reverse)
         for object_id in sorted_objects:
             if object_id.amount >= gas_budget:
                 return object_id.id
