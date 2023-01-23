@@ -4,8 +4,8 @@ from typing import Optional, List
 
 import requests
 
-from py_sui import exceptions
-from py_sui.models import Types, History, Tx, Coin, Nft, StringAndBytes
+from py_sui import exceptions, types
+from py_sui.models import History, Tx, Coin, Nft, StringAndBytes
 from py_sui.rpc_methods import RPC
 
 
@@ -67,8 +67,8 @@ class Transaction:
         finally:
             return history
 
-    def move_call(self, package_object_id: Types.ObjectID, module: str, function: str,
-                  type_arguments: Optional[List[Types.TypeTag]], arguments: List[Types.SuiJsonValue],
+    def move_call(self, package_object_id: types.ObjectID, module: str, function: str,
+                  type_arguments: Optional[List[types.TypeTag]], arguments: List[types.SuiJsonValue],
                   gas_budget: int = 1_000) -> Optional[dict]:
         gas = self.client.wallet.find_object_for_gas(gas_budget=gas_budget)
         if not gas:
@@ -115,7 +115,7 @@ class Transaction:
         finally:
             return responses
 
-    def send_object(self, object_id: str, recipient: Types.SuiAddress) -> Optional[dict]:
+    def send_object(self, object_id: types.ObjectID, recipient: types.SuiAddress) -> Optional[dict]:
         gas_budget = 1_000
         gas = self.client.wallet.find_object_for_gas(gas_budget=gas_budget)
         if not gas:
@@ -127,7 +127,7 @@ class Transaction:
         tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
         return self.client.sign_and_execute(tx_bytes)
 
-    def send_coin(self, recipient: Types.SuiAddress, amount: int) -> Optional[dict]:
+    def send_coin(self, recipient: types.SuiAddress, amount: int) -> Optional[dict]:
         balance = self.client.wallet.balance()
         gas_budget = 1_000
         gas = self.client.wallet.find_object_for_gas(gas_budget=gas_budget, balance=balance)
@@ -143,7 +143,7 @@ class Transaction:
         tx_bytes = StringAndBytes(str_=tx_bytes, bytes_=base64.b64decode(tx_bytes))
         return self.client.sign_and_execute(tx_bytes)
 
-    def send_token(self, token: Optional[Coin], recipient: Types.SuiAddress, amount: int) -> Optional[dict]:
+    def send_token(self, token: Optional[Coin], recipient: types.SuiAddress, amount: int) -> Optional[dict]:
         balance = self.client.wallet.balance()
         if token.name in balance.tokens:
             gas_budget = 1_000
@@ -161,5 +161,5 @@ class Transaction:
         else:
             raise exceptions.NoSuchToken('There is no such token!')
 
-    def send_nft(self, nft: Optional[Nft], recipient: Types.SuiAddress) -> Optional[dict]:
+    def send_nft(self, nft: Nft, recipient: types.SuiAddress) -> Optional[dict]:
         return self.send_object(object_id=nft.object_id, recipient=recipient)

@@ -1,8 +1,8 @@
 import uuid
 from typing import Optional, List, Union
 
-from py_sui import exceptions
-from py_sui.models import Types, ObjectType
+from py_sui import exceptions, types
+from py_sui.models import ObjectType
 
 
 class RPC:
@@ -29,9 +29,9 @@ class RPC:
         raise exceptions.RPCException(response=response)
 
     @staticmethod
-    def batchTransaction(client, signer: Types.SuiAddress,
-                         single_transaction_params: List[Types.RPCTransactionRequestParams],
-                         gas: Optional[Types.ObjectID] = None, gas_budget: int = 1_000,
+    def batchTransaction(client, signer: types.SuiAddress,
+                         single_transaction_params: List[types.RPCTransactionRequestParams],
+                         gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                          get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, single_transaction_params, gas, gas_budget]
         json_data = RPC.make_json(method='sui_batchTransaction', params=params)
@@ -41,7 +41,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def dryRunTransaction(client, tx_bytes: Types.Base64, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def dryRunTransaction(client, tx_bytes: types.Base64, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [tx_bytes]
         json_data = RPC.make_json(method='sui_dryRunTransaction', params=params)
         if get_json:
@@ -50,9 +50,9 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def executeTransaction(client, tx_bytes: Types.Base64, sig_scheme: Types.SignatureScheme,
-                           signature: Types.Base64, pub_key: Types.Base64,
-                           request_type: Types.ExecuteTransactionRequestType,
+    def executeTransaction(client, tx_bytes: types.Base64, sig_scheme: types.SignatureScheme,
+                           signature: types.Base64, pub_key: types.Base64,
+                           request_type: types.ExecuteTransactionRequestType,
                            get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [tx_bytes, sig_scheme, signature, pub_key, request_type]
         json_data = RPC.make_json(method='sui_executeTransaction', params=params)
@@ -62,8 +62,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def executeTransactionSerializedSig(client, tx_bytes: Types.Base64, signature: Types.Base64,
-                                        request_type: Types.ExecuteTransactionRequestType,
+    def executeTransactionSerializedSig(client, tx_bytes: types.Base64, signature: types.Base64,
+                                        request_type: types.ExecuteTransactionRequestType,
                                         get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [tx_bytes, signature, request_type]
         json_data = RPC.make_json(method='sui_executeTransactionSerializedSig', params=params)
@@ -73,7 +73,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getAllBalances(client, owner: Types.SuiAddress, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def getAllBalances(client, owner: types.SuiAddress, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [owner]
         json_data = RPC.make_json(method='sui_getAllBalances', params=params)
         if get_json:
@@ -82,7 +82,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getAllCoins(client, owner: Types.SuiAddress, cursor: Types.ObjectID,
+    def getAllCoins(client, owner: types.SuiAddress, cursor: types.ObjectID,
                     limit: Optional[int], get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [owner, cursor, limit]
         json_data = RPC.make_json(method='sui_getAllCoins', params=params)
@@ -92,7 +92,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getBalance(client, owner: Types.SuiAddress, coin_type: Union[str, ObjectType],
+    def getBalance(client, owner: types.SuiAddress, coin_type: Union[str, ObjectType],
                    get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [owner, coin_type.raw_type if isinstance(coin_type, ObjectType) else coin_type]
         json_data = RPC.make_json(method='sui_getBalance', params=params)
@@ -112,7 +112,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getCoins(client, owner: Types.SuiAddress, coin_type: Union[str, ObjectType], cursor: Types.ObjectID,
+    def getCoins(client, owner: types.SuiAddress, coin_type: Union[str, ObjectType], cursor: types.ObjectID,
                  limit: Optional[int], get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [owner, coin_type.raw_type if isinstance(coin_type, ObjectType) else coin_type, cursor, limit]
         json_data = RPC.make_json(method='sui_getCoins', params=params)
@@ -131,7 +131,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getDynamicFieldObject(client, parent_object_id: Types.ObjectID, name: str,
+    def getDynamicFieldObject(client, parent_object_id: types.ObjectID, name: str,
                               get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [parent_object_id, name]
         json_data = RPC.make_json(method='sui_getDynamicFieldObject', params=params)
@@ -141,7 +141,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getDynamicFields(client, parent_object_id: Types.ObjectID, cursor: Types.ObjectID,
+    def getDynamicFields(client, parent_object_id: types.ObjectID, cursor: types.ObjectID,
                          limit: Optional[int], get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [parent_object_id, cursor, limit]
         json_data = RPC.make_json(method='sui_getDynamicFields', params=params)
@@ -151,7 +151,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getEvents(client, query: Types.EventQuery, cursor: Types.EventID, limit: int,
+    def getEvents(client, query: types.EventQuery, cursor: types.EventID, limit: int,
                   descending_order: bool = False, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [query, cursor, limit, descending_order]
         json_data = RPC.make_json(method='sui_getEvents', params=params)
@@ -161,7 +161,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getMoveFunctionArgTypes(client, package: Types.ObjectID, module: str, function: str,
+    def getMoveFunctionArgTypes(client, package: types.ObjectID, module: str, function: str,
                                 get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [package, module, function]
         json_data = RPC.make_json(method='sui_getMoveFunctionArgTypes', params=params)
@@ -171,7 +171,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getNormalizedMoveFunction(client, package: Types.ObjectID, module: str, function: str,
+    def getNormalizedMoveFunction(client, package: types.ObjectID, module: str, function: str,
                                   get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [package, module, function]
         json_data = RPC.make_json(method='sui_getNormalizedMoveFunction', params=params)
@@ -181,7 +181,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getNormalizedMoveModule(client, package: Types.ObjectID, module_name: str,
+    def getNormalizedMoveModule(client, package: types.ObjectID, module_name: str,
                                 get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [package, module_name]
         json_data = RPC.make_json(method='sui_getNormalizedMoveModule', params=params)
@@ -191,7 +191,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getNormalizedMoveModulesByPackage(client, package: Types.ObjectID,
+    def getNormalizedMoveModulesByPackage(client, package: types.ObjectID,
                                           get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [package]
         json_data = RPC.make_json(method='sui_getNormalizedMoveModulesByPackage', params=params)
@@ -201,7 +201,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getNormalizedMoveStruct(client, package: Types.ObjectID, module_name: str,
+    def getNormalizedMoveStruct(client, package: types.ObjectID, module_name: str,
                                 struct_name: str, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [package, module_name, struct_name]
         json_data = RPC.make_json(method='sui_getNormalizedMoveStruct', params=params)
@@ -211,7 +211,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getObject(client, object_id: Types.ObjectID, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def getObject(client, object_id: types.ObjectID, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [object_id]
         json_data = RPC.make_json(method='sui_getObject', params=params)
         if get_json:
@@ -220,7 +220,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getObjectsOwnedByAddress(client, address: Types.SuiAddress,
+    def getObjectsOwnedByAddress(client, address: types.SuiAddress,
                                  get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [address]
         json_data = RPC.make_json(method='sui_getObjectsOwnedByAddress', params=params)
@@ -230,7 +230,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getObjectsOwnedByObject(client, object_id: Types.ObjectID,
+    def getObjectsOwnedByObject(client, object_id: types.ObjectID,
                                 get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [object_id]
         json_data = RPC.make_json(method='sui_getObjectsOwnedByObject', params=params)
@@ -240,7 +240,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getRawObject(client, object_id: Types.ObjectID, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def getRawObject(client, object_id: types.ObjectID, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [object_id]
         json_data = RPC.make_json(method='sui_getRawObject', params=params)
         if get_json:
@@ -275,7 +275,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getTransaction(client, digest: Types.TransactionDigest, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def getTransaction(client, digest: types.TransactionDigest, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [digest]
         json_data = RPC.make_json(method='sui_getTransaction', params=params)
         if get_json:
@@ -284,7 +284,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getTransactionAuthSigners(client, digest: Types.TransactionDigest,
+    def getTransactionAuthSigners(client, digest: types.TransactionDigest,
                                   get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [digest]
         json_data = RPC.make_json(method='sui_getTransactionAuthSigners', params=params)
@@ -294,7 +294,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def getTransactions(client, query: Types.TransactionQuery, cursor: Optional[Types.TransactionDigest],
+    def getTransactions(client, query: types.TransactionQuery, cursor: Optional[types.TransactionDigest],
                         limit: Optional[int], descending_order: bool = False,
                         get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [query, cursor, limit, descending_order]
@@ -314,8 +314,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def mergeCoins(client, signer: Types.SuiAddress, primary_coin: Types.ObjectID,
-                   coin_to_merge: Types.ObjectID, gas: Optional[Types.ObjectID] = None, gas_budget: int = 1_000,
+    def mergeCoins(client, signer: types.SuiAddress, primary_coin: types.ObjectID,
+                   coin_to_merge: types.ObjectID, gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                    get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, primary_coin, coin_to_merge, gas, gas_budget]
         json_data = RPC.make_json(method='sui_mergeCoins', params=params)
@@ -325,9 +325,9 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def moveCall(client, signer: Types.SuiAddress, package_object_id: Types.ObjectID, module: str,
-                 function: str, type_arguments: Optional[List[Types.TypeTag]], arguments: List[Types.SuiJsonValue],
-                 gas: Optional[Types.ObjectID] = None, gas_budget: int = 10_000,
+    def moveCall(client, signer: types.SuiAddress, package_object_id: types.ObjectID, module: str,
+                 function: str, type_arguments: Optional[List[types.TypeTag]], arguments: List[types.SuiJsonValue],
+                 gas: Optional[types.ObjectID] = None, gas_budget: int = 10_000,
                  get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, package_object_id, module, function, type_arguments, arguments, gas, gas_budget]
         json_data = RPC.make_json(method='sui_moveCall', params=params)
@@ -337,8 +337,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def pay(client, signer: Types.SuiAddress, input_coins: List[Types.ObjectID],
-            recipients: List[Types.SuiAddress], amounts: List[int], gas: Optional[Types.ObjectID] = None,
+    def pay(client, signer: types.SuiAddress, input_coins: List[types.ObjectID],
+            recipients: List[types.SuiAddress], amounts: List[int], gas: Optional[types.ObjectID] = None,
             gas_budget: int = 1_000, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, input_coins, recipients, amounts, gas, gas_budget]
         json_data = RPC.make_json(method='sui_pay', params=params)
@@ -348,8 +348,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def payAllSui(client, signer: Types.SuiAddress, input_coins: List[Types.ObjectID],
-                  recipient: Types.SuiAddress, gas_budget: int = 1_000,
+    def payAllSui(client, signer: types.SuiAddress, input_coins: List[types.ObjectID],
+                  recipient: types.SuiAddress, gas_budget: int = 1_000,
                   get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, input_coins, recipient, gas_budget]
         json_data = RPC.make_json(method='sui_payAllSui', params=params)
@@ -359,8 +359,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def paySui(client, signer: Types.SuiAddress, input_coins: List[Types.ObjectID],
-               recipients: List[Types.SuiAddress], amounts: List[int], gas_budget: int = 1_000,
+    def paySui(client, signer: types.SuiAddress, input_coins: List[types.ObjectID],
+               recipients: List[types.SuiAddress], amounts: List[int], gas_budget: int = 1_000,
                get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, input_coins, recipients, amounts, gas_budget]
         json_data = RPC.make_json(method='sui_paySui', params=params)
@@ -370,8 +370,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def publish(client, sender: Types.SuiAddress, compiled_modules: List[Types.Base64],
-                gas: Optional[Types.ObjectID] = None, gas_budget: int = 1_000,
+    def publish(client, sender: types.SuiAddress, compiled_modules: List[types.Base64],
+                gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                 get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [sender, compiled_modules, gas, gas_budget]
         json_data = RPC.make_json(method='sui_publish', params=params)
@@ -381,8 +381,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def splitCoin(client, signer: Types.SuiAddress, coin_object_id: Types.ObjectID,
-                  split_amounts: List[int], gas: Optional[Types.ObjectID] = None, gas_budget: int = 1_000,
+    def splitCoin(client, signer: types.SuiAddress, coin_object_id: types.ObjectID,
+                  split_amounts: List[int], gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                   get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, coin_object_id, split_amounts, gas, gas_budget]
         json_data = RPC.make_json(method='sui_splitCoin', params=params)
@@ -392,8 +392,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def splitCoinEqual(client, signer: Types.SuiAddress, coin_object_id: Types.ObjectID,
-                       split_count: int, gas: Optional[Types.ObjectID] = None, gas_budget: int = 1_000,
+    def splitCoinEqual(client, signer: types.SuiAddress, coin_object_id: types.ObjectID,
+                       split_count: int, gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                        get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, coin_object_id, split_count, gas, gas_budget]
         json_data = RPC.make_json(method='sui_splitCoinEqual', params=params)
@@ -403,7 +403,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def subscribeEvent(client, filter: Types.EventFilter, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def subscribeEvent(client, filter: types.EventFilter, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [filter]
         json_data = RPC.make_json(method='sui_subscribeEvent', params=params)
         if get_json:
@@ -412,8 +412,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def transferObject(client, signer: Types.SuiAddress, object_id: Types.ObjectID, recipient: Types.SuiAddress,
-                       gas: Optional[Types.ObjectID] = None, gas_budget: int = 1_000,
+    def transferObject(client, signer: types.SuiAddress, object_id: types.ObjectID, recipient: types.SuiAddress,
+                       gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                        get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, object_id, gas, gas_budget, recipient]
         json_data = RPC.make_json(method='sui_transferObject', params=params)
@@ -423,8 +423,8 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def transferSui(client, signer: Types.SuiAddress, sui_object_id: Types.ObjectID, gas_budget: int,
-                    recipient: Types.SuiAddress, amount: int, get_json: bool = False) -> Optional[Union[dict, list]]:
+    def transferSui(client, signer: types.SuiAddress, sui_object_id: types.ObjectID, gas_budget: int,
+                    recipient: types.SuiAddress, amount: int, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, sui_object_id, gas_budget, recipient, amount]
         json_data = RPC.make_json(method='sui_transferSui', params=params)
         if get_json:
@@ -433,7 +433,7 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
-    def tryGetPastObject(client, object_id: Types.ObjectID, version: Types.SequenceNumber,
+    def tryGetPastObject(client, object_id: types.ObjectID, version: types.SequenceNumber,
                          get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [object_id, version]
         json_data = RPC.make_json(method='sui_tryGetPastObject', params=params)
