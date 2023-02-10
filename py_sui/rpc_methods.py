@@ -6,6 +6,8 @@ from py_sui.models import ObjectType
 
 
 class RPC:
+    version = '0.26.0'
+
     @staticmethod
     def make_json(method: str, params: Optional[list] = None, request_id: Optional[str] = None):
         return {
@@ -35,6 +37,16 @@ class RPC:
                          get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [signer, single_transaction_params, gas, gas_budget]
         json_data = RPC.make_json(method='sui_batchTransaction', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def devInspectTransaction(client, sender_address: types.SuiAddress, tx_bytes: types.Base64, gas_price: int,
+                              epoch: int, get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [sender_address, tx_bytes, gas_price, epoch]
+        json_data = RPC.make_json(method='sui_devInspectTransaction', params=params)
         if get_json:
             return json_data
 
@@ -102,6 +114,44 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
+    def getCheckpointContents(client, sequence_number: int, get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [sequence_number]
+        json_data = RPC.make_json(method='sui_getCheckpointContents', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def getCheckpointContentsByDigest(client, digest: types.CheckpointContentsDigest,
+                                      get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [digest]
+        json_data = RPC.make_json(method='sui_getCheckpointContentsByDigest', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def getCheckpointSummary(client, sequence_number: int, get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [sequence_number]
+        json_data = RPC.make_json(method='sui_getCheckpointSummary', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def getCheckpointSummaryByDigest(client, digest: types.CheckpointDigest,
+                                     get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [digest]
+        json_data = RPC.make_json(method='sui_getCheckpointSummaryByDigest', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
     def getCoinMetadata(client, coin_type: Union[str, ObjectType],
                         get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [coin_type.raw_type if isinstance(coin_type, ObjectType) else coin_type]
@@ -125,6 +175,15 @@ class RPC:
     def getCommitteeInfo(client, epoch: int, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [epoch]
         json_data = RPC.make_json(method='sui_getCommitteeInfo', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def getDelegatedStakes(client, owner: types.SuiAddress, get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [owner]
+        json_data = RPC.make_json(method='sui_getDelegatedStakes', params=params)
         if get_json:
             return json_data
 
@@ -155,6 +214,14 @@ class RPC:
                   descending_order: bool = False, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [query, cursor, limit, descending_order]
         json_data = RPC.make_json(method='sui_getEvents', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def getLatestCheckpointSequenceNumber(client, get_json: bool = False) -> Optional[Union[dict, list]]:
+        json_data = RPC.make_json(method='sui_getLatestCheckpointSequenceNumber')
         if get_json:
             return json_data
 
@@ -249,6 +316,14 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
+    def getReferenceGasPrice(client, get_json: bool = False) -> Optional[Union[dict, list]]:
+        json_data = RPC.make_json(method='sui_getReferenceGasPrice')
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
     def getSuiSystemState(client, get_json: bool = False) -> Optional[Union[dict, list]]:
         json_data = RPC.make_json(method='sui_getSuiSystemState')
         if get_json:
@@ -308,6 +383,14 @@ class RPC:
     def getTransactionsInRange(client, start: int, end: int, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [start, end]
         json_data = RPC.make_json(method='sui_getTransactionsInRange', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def getValidators(client, get_json: bool = False) -> Optional[Union[dict, list]]:
+        json_data = RPC.make_json(method='sui_getValidators')
         if get_json:
             return json_data
 
@@ -381,6 +464,40 @@ class RPC:
         return RPC.send_request(client=client, json_data=json_data)
 
     @staticmethod
+    def requestAddDelegation(client, signer: types.SuiAddress, coins: List[types.ObjectID], amount: int,
+                             validator: types.SuiAddress, gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
+                             get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [signer, coins, amount, validator, gas, gas_budget]
+        json_data = RPC.make_json(method='sui_requestAddDelegation', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def requestSwitchDelegation(client, signer: types.SuiAddress, delegation: types.ObjectID,
+                                staked_sui: types.ObjectID, new_validator_address: types.SuiAddress,
+                                gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
+                                get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [signer, delegation, staked_sui, new_validator_address, gas, gas_budget]
+        json_data = RPC.make_json(method='sui_requestSwitchDelegation', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def requestWithdrawDelegation(client, signer: types.SuiAddress, delegation: types.ObjectID,
+                                  staked_sui: types.ObjectID, gas: Optional[types.ObjectID] = None,
+                                  gas_budget: int = 1_000, get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [signer, delegation, staked_sui, gas, gas_budget]
+        json_data = RPC.make_json(method='sui_requestWithdrawDelegation', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
     def splitCoin(client, signer: types.SuiAddress, coin_object_id: types.ObjectID,
                   split_amounts: List[int], gas: Optional[types.ObjectID] = None, gas_budget: int = 1_000,
                   get_json: bool = False) -> Optional[Union[dict, list]]:
@@ -406,6 +523,16 @@ class RPC:
     def subscribeEvent(client, filter: types.EventFilter, get_json: bool = False) -> Optional[Union[dict, list]]:
         params = [filter]
         json_data = RPC.make_json(method='sui_subscribeEvent', params=params)
+        if get_json:
+            return json_data
+
+        return RPC.send_request(client=client, json_data=json_data)
+
+    @staticmethod
+    def tblsSignRandomnessObject(client, object_id: types.ObjectID, commitment_type: str,
+                                 get_json: bool = False) -> Optional[Union[dict, list]]:
+        params = [object_id, commitment_type]
+        json_data = RPC.make_json(method='sui_tblsSignRandomnessObject', params=params)
         if get_json:
             return json_data
 
